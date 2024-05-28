@@ -28,6 +28,11 @@ class RegisterForm(forms.Form):
     confirm_password = forms.CharField(widget=forms.PasswordInput({"class": "form-control"}))
 
 class StudentForm(forms.ModelForm):
+    name = forms.CharField(widget=forms.TextInput({"class": "form-control"}))
+    last_name = forms.CharField(widget=forms.TextInput({"class": "form-control"}))
+    email = forms.CharField(widget=forms.EmailInput({"class": "form-control"}))
+    location = forms.CharField(widget=forms.TextInput({"class": "form-control"}))
+    phone = forms.CharField(widget=forms.NumberInput({"class": "form-control"}))
     class Meta:
         model = Student
         fields = ['name', 'last_name', 'email', 'location', 'phone', 'hobby', 'image']

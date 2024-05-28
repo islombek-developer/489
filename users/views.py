@@ -19,43 +19,42 @@ class LoginView(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/') 
+                return redirect('/register') 
         return render(request, 'users/login.html', context={"form": form})
-
 class RegisterView(View):
     def get(self, request):
         form = RegisterForm()
-        return render(request, 'users/register.html', context={"form": form})
+        return render(request, 'users/register.html', context={"form":form})
 
     def post(self, request):
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            confirm_password = form.cleaned_data['confirm_password']
+        username = request.POST['username']
+        fisrt_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
 
-            if password == confirm_password:
-                user = User(
-                    username=username,
-                    first_name=first_name,
-                    last_name=last_name,
-                    email=email
-                )
-                user.set_password(password)
-                user.save()
-                return redirect('/login-page')  
-        return render(request, 'users/register.html', context={"form": form})
+        if password == confirm_password:
+            user = User()
 
+            user.username = username
+            user.first_name = fisrt_name
+            user.last_name = last_name
+            user.email = email
+            user.set_password(password)
+            user.save()
 
+            user.set_password(password)
+            return redirect('/reg')
+
+        form = RegisterForm()
+        return render(request, 'users/register.html', context={"form":form})
 def student_create(request):
     if request.method == 'POST':
         form = StudentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('/profil')
     else:
         form = StudentForm()
     return render(request, 'users/form.html', context={'form': form})
@@ -80,6 +79,9 @@ def read(request,id):
     student=Student.objects.get(id=id)
     return render(request, 'users/table.html',context={"student":student})
 
+def reg(request):
+    student=User.objects.all()
+    return render(request, 'users/reg.html',context={"student":student})
 
 
 def delete(request, id):
